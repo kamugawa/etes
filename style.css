@@ -1,0 +1,1164 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background: #101128;
+}
+
+/* Background Container */
+.background-container {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+}
+
+.animated-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://i.pinimg.com/originals/6f/58/7f/6f587f1c4c4e8c8a8f4a4c4e8c8a8f4a.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.4;
+    filter: blur(1px) brightness(0.7) contrast(1.2);
+}
+
+.gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+        rgba(15, 23, 42, 0.8) 0%, 
+        rgba(30, 41, 59, 0.7) 50%, 
+        rgba(15, 23, 42, 0.8) 100%);
+}
+
+.ambient-light {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 50%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.light-effect {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.1;
+}
+
+.light-1 {
+    top: 25%;
+    left: 25%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #ec4899, transparent);
+}
+
+.light-2 {
+    bottom: 25%;
+    right: 25%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #8b5cf6, transparent);
+}
+
+.light-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, #f59e0b, transparent);
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 50;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-btn {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    color: #fbbf24;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.nav-btn.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+}
+
+/* Tab System */
+.tab-content {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0;
+    visibility: hidden;
+}
+
+.tab-content.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Book Tab Styles */
+.book-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 3000px;
+    padding: 20px;
+}
+
+.book-scene {
+    filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5)) 
+            drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4))
+            drop-shadow(0 0 20px rgba(219, 39, 119, 0.1));
+    transition: all 1s ease-out;
+}
+
+.book-3d {
+    width: 280px;
+    height: 380px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+}
+
+/* Book States */
+.book-3d:hover {
+    transform: rotateY(5deg) rotateX(-3deg) scale(1.02);
+    filter: drop-shadow(0 60px 100px rgba(0, 0, 0, 0.5));
+}
+
+.book-3d.opening .book-front-cover {
+    transform: rotateY(-180deg);
+    transition: transform 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.book-3d.pages-turning {
+    animation: bookReading 4s ease-in-out infinite alternate;
+}
+
+.book-3d.final-page,
+.book-3d.zoomed {
+    animation: bookGlowing 4s ease-in-out infinite alternate;
+}
+
+.book-3d.zoomed {
+    transform: scale(1.25) translateY(-40px);
+}
+
+/* Book Spine */
+.book-spine {
+    position: absolute;
+    left: -15px;
+    width: 30px;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.spine-front {
+    position: absolute;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(135deg, #92400e 0%, #78350f 50%, #451a03 100%);
+    transform: translateZ(15px);
+    border-radius: 0 8px 8px 0;
+    box-shadow: inset -5px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.spine-back {
+    position: absolute;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(135deg, #78350f 0%, #451a03 100%);
+    transform: translateZ(-15px) rotateY(180deg);
+    border-radius: 8px 0 0 8px;
+}
+
+.spine-top {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(45deg, #92400e, #78350f);
+    transform: rotateX(90deg) translateZ(15px);
+    transform-origin: top;
+}
+
+.spine-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(45deg, #78350f, #451a03);
+    transform: rotateX(-90deg) translateZ(15px);
+    transform-origin: bottom;
+}
+
+.spine-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%) rotateZ(90deg);
+    color: #d4af37;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    font-family: 'Playfair Display', serif;
+}
+
+/* Book Covers */
+.book-back-cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #92400e 0%, #78350f 50%, #451a03 100%);
+    border-radius: 0 12px 12px 0;
+    transform: rotateY(180deg) translateZ(-15px);
+    backface-visibility: hidden;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+}
+
+.book-front-cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #92400e 0%, #78350f 30%, #451a03 100%);
+    border-radius: 0 12px 12px 0;
+    transform: translateZ(15px);
+    backface-visibility: hidden;
+    overflow: hidden;
+    transform-origin: left center;
+}
+
+/* Cover Textures and Effects */
+.cover-texture {
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+        linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.02) 50%, transparent 52%);
+}
+
+.cover-lighting {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 30%, 
+        transparent 70%, 
+        rgba(0, 0, 0, 0.1) 100%);
+}
+
+.cover-border {
+    position: absolute;
+    inset: 20px;
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    border-radius: 8px;
+    box-shadow: 
+        inset 0 0 20px rgba(212, 175, 55, 0.1),
+        0 0 20px rgba(212, 175, 55, 0.1);
+}
+
+.cover-content {
+    position: absolute;
+    inset: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 10;
+}
+
+/* Cover Emblem */
+.cover-emblem {
+    margin-bottom: 40px;
+}
+
+.emblem-outer {
+    width: 80px;
+    height: 80px;
+    background: conic-gradient(from 0deg, #ec4899, #f472b6, #d4af37, #f59e0b, #ec4899);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+        0 0 30px rgba(236, 72, 153, 0.4),
+        inset 0 0 20px rgba(0, 0, 0, 0.2);
+    animation: emblemRotate 20s linear infinite;
+}
+
+.emblem-inner {
+    width: 65px;
+    height: 65px;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.emblem-icon {
+    color: #d4af37;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Cover Typography */
+.cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ec4899, #d4af37);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(236, 72, 153, 0.3);
+    letter-spacing: 1px;
+}
+
+.cover-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    background: linear-gradient(135deg, #f472b6, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 30px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
+}
+
+.cover-ornament {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ec4899, #d4af37, transparent);
+    margin: 20px 0;
+    position: relative;
+}
+
+.cover-ornament::before,
+.cover-ornament::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    width: 8px;
+    height: 8px;
+    background: #d4af37;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.cover-ornament::before {
+    left: -3px;
+}
+
+.cover-ornament::after {
+    right: -3px;
+}
+
+.cover-cta {
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, #f472b6, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 300;
+    animation: ctaPulse 2s ease-in-out infinite;
+    letter-spacing: 1px;
+}
+
+.cover-shadow-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+        transparent 0%, 
+        rgba(0, 0, 0, 0.1) 50%, 
+        rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+}
+
+/* Pages Stack */
+.pages-stack {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+}
+
+.book-page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #fefce8 0%, #fef3c7 50%, #fde68a 100%);
+    border-radius: 0 12px 12px 0;
+    transform-origin: left center;
+    backface-visibility: hidden;
+    box-shadow: 
+        2px 0 10px rgba(0, 0, 0, 0.1),
+        inset -3px 0 8px rgba(146, 64, 14, 0.1);
+    border-right: 3px solid #d97706;
+    overflow: hidden;
+    transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.book-page.turned {
+    transform: rotateY(-180deg);
+}
+
+.page-texture {
+    position: absolute;
+    inset: 0;
+    background: 
+        repeating-linear-gradient(90deg, 
+            transparent 0px, 
+            rgba(217, 119, 6, 0.02) 1px, 
+            transparent 2px),
+        repeating-linear-gradient(0deg, 
+            transparent 0px, 
+            rgba(217, 119, 6, 0.01) 1px, 
+            transparent 20px);
+}
+
+.page-lighting {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.3) 0%, 
+        transparent 30%, 
+        transparent 70%, 
+        rgba(146, 64, 14, 0.1) 100%);
+}
+
+.page-shadow {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, 
+        rgba(146, 64, 14, 0.2) 0%, 
+        transparent 100%);
+}
+
+/* Page Content */
+.page-content {
+    position: absolute;
+    inset: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 10;
+}
+
+/* Regular Page Content */
+.regular-page-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-number-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.page-number {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.page-ornament-top {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+.page-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 20px;
+}
+
+.page-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #78350f;
+    font-style: italic;
+    text-align: center;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.page-decoration {
+    margin-top: 20px;
+}
+
+.decoration-flourish {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #d4af37 2px, transparent 2px);
+    background-size: 8px 8px;
+    border-radius: 50%;
+    margin: 0 auto;
+    opacity: 0.6;
+}
+
+.page-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.footer-ornament {
+    width: 30px;
+    height: 1px;
+    background: #d4af37;
+}
+
+/* Final Page Content */
+.final-page-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.final-emblem {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.final-emblem-rings {
+    position: absolute;
+    inset: 0;
+}
+
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid;
+}
+
+.ring-1 {
+    inset: 0;
+    border-color: rgba(212, 175, 55, 0.6);
+    animation: ringPulse 3s ease-in-out infinite;
+}
+
+.ring-2 {
+    inset: 15px;
+    border-color: rgba(212, 175, 55, 0.4);
+    animation: ringPulse 3s ease-in-out infinite 0.5s;
+}
+
+.ring-3 {
+    inset: 30px;
+    border-color: rgba(212, 175, 55, 0.2);
+    animation: ringPulse 3s ease-in-out infinite 1s;
+}
+
+.final-icon {
+    color: #d4af37;
+    z-index: 10;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.final-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #92400e;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.title-accent {
+    display: block;
+    background: linear-gradient(135deg, #d4af37, #f4d03f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.final-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #78350f;
+    text-align: center;
+    max-width: 300px;
+}
+
+.final-ornament {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ornament-line {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+.ornament-diamond {
+    width: 8px;
+    height: 8px;
+    background: #d4af37;
+    transform: rotate(45deg);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.page-number-bottom {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    color: rgba(146, 64, 14, 0.6);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Content Tab Styles */
+.content-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.content-wrapper {
+    max-width: 800px;
+    width: 100%;
+    animation: contentFadeIn 1.5s ease-out;
+}
+
+.content-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.main-title {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f472b6, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.main-description {
+    font-size: 1.2rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 300;
+}
+
+/* Music Player */
+.music-player {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.play-button {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #ec4899, #f59e0b);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+    flex-shrink: 0;
+}
+
+.play-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(236, 72, 153, 0.4);
+}
+
+.play-button svg {
+    color: white;
+}
+
+.player-info {
+    flex: 1;
+}
+
+.track-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.track-description {
+    color: #cbd5e1;
+    font-size: 1rem;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ec4899;
+}
+
+.volume-bar {
+    width: 80px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.volume-fill {
+    width: 75%;
+    height: 100%;
+    background: linear-gradient(90deg, #ec4899, #f59e0b);
+    border-radius: 3px;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ec4899, #f59e0b);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 1s ease;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* Featured Image */
+.featured-image {
+
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  
+}
+
+.featured-image img {
+
+    width: 220px;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease;
+}
+
+.featured-image:hover img {
+    transform: scale(1.05);
+    
+}
+
+.image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 50%);
+}
+
+.image-content {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    color: white;
+}
+
+.image-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.image-description {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 400px;
+    line-height: 1.5;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #ec4899, #f59e0b);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
+}
+
+.action-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(236, 72, 153, 0.4);
+}
+
+/* Animations */
+@keyframes emblemRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes ctaPulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes bookReading {
+    0% { transform: rotateY(0deg) rotateX(0deg); }
+    100% { transform: rotateY(3deg) rotateX(-2deg); }
+}
+
+@keyframes bookGlowing {
+    0% { 
+        filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5)) 
+                drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4))
+                drop-shadow(0 0 20px rgba(219, 39, 119, 0.1));
+    }
+    100% { 
+        filter: drop-shadow(0 40px 80px rgba(236, 72, 153, 0.3)) 
+                drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5))
+                drop-shadow(0 0 60px rgba(236, 72, 153, 0.2))
+                drop-shadow(0 0 30px rgba(212, 175, 55, 0.1));
+    }
+}
+
+@keyframes ringPulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes contentFadeIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 360px) {
+    .book-3d {
+        width: 200px;
+        height: 280px;
+    }
+    
+    .cover-title {
+        font-size: 1.3rem;
+    }
+    
+    .cover-subtitle {
+        font-size: 1rem;
+    }
+    
+    .emblem-outer {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .emblem-inner {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .main-description {
+        font-size: 1rem;
+    }
+    
+    .nav-buttons {
+        top: 15px;
+        right: 15px;
+        gap: 10px;
+    }
+    
+    .nav-btn {
+        padding: 12px;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 640px) {
+    .book-3d {
+        width: 240px;
+        height: 320px;
+    }
+ .featured-image img {
+height: 50%;
+width: 49%;
+
+
+
+    }
+    .cover-title {
+        font-size: 1.5rem;
+    }
+    
+    .cover-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .emblem-outer {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .emblem-inner {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .main-title {
+        font-size: 2.5rem;
+    }
+    
+    .player-controls {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .volume-control {
+        justify-content: center;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+    .book-3d {
+        width: 300px;
+        height: 400px;
+    }
+    
+    .cover-title {
+        font-size: 1.8rem;
+    }
+    
+    .cover-subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .emblem-outer {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .emblem-inner {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .main-title {
+        font-size: 2.8rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .book-3d {
+        width: 350px;
+        height: 480px;
+    }
+    
+    .cover-title {
+        font-size: 2rem;
+    }
+    
+    .cover-subtitle {
+        font-size: 1.5rem;
+    }
+    
+    .emblem-outer {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .emblem-inner {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .book-3d {
+        width: 420px;
+        height: 580px;
+    }
+    
+    .cover-title {
+        font-size: 2.5rem;
+    }
+    
+    .cover-subtitle {
+        font-size: 1.8rem;
+    }
+    
+    .emblem-outer {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .emblem-inner {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .book-3d.zoomed {
+        transform: scale(1.4) translateY(-60px);
+    }
+}
+
+/* Performance Optimizations */
+.book-3d,
+.book-front-cover,
+.book-page,
+.book-spine > * {
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .book-scene {
+        filter: none !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .book-front-cover {
+        border: 2px solid currentColor;
+    }
+    
+    .cover-title, .cover-subtitle {
+        color: white !important;
+        -webkit-text-fill-color: white !important;
+    }
+}
